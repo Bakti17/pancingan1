@@ -80,6 +80,8 @@ class LoginPage extends StatelessWidget {
                 decoration: InputDecoration.collapsed(hintText: 'Password')
               ),
             ),
+            Spacer(flex: 1,),
+            
           ],
         ),
         ],
