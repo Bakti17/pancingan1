@@ -1,49 +1,20 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:pancingan1/homepage.dart';
-import 'package:pancingan1/register.dart';
-import 'package:http/http.dart' as http;
+import 'package:pancingan1/login.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({ Key? key }) : super(key: key);
+class RegisterPage extends StatefulWidget {
+  const RegisterPage({ Key? key }) : super(key: key);
 
   @override
-  _LoginPageState createState() => _LoginPageState();
+  _RegisterPageState createState() => _RegisterPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
-  TextEditingController email = TextEditingController();
-  TextEditingController pass = TextEditingController();
-  
-  void login() async{
-    try{
-      var response = await http.post(Uri.parse("http://10.0.2.2/pancingan/login.php"), body: {"email":email.text,"ubah":pass.text});
-      List list = json.decode(response.body);
-    setState(() {
-      UserDetail.email.text = list[0]['email'];
-      UserDetail.nama.text = list[0]['nama'];
-      UserDetail.kelamin.text = list[0]['kelamin'];
-      UserDetail.hp.text = list[0]['hp'];
-    });
-    Navigator.pushReplacement(
-                  context, 
-                  PageRouteBuilder(
-                      pageBuilder: (context, animation1, animation2) => HomePage(),
-                      transitionDuration: Duration.zero,
-                  ),
-                );
-    }catch(err){
-      print(err);
-    }
-
-  }
-
+class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
         fit: StackFit.expand,
+
         children: <Widget>[ 
           Container(
             width: MediaQuery.of(context).size.width,
@@ -56,7 +27,7 @@ class _LoginPageState extends State<LoginPage> {
             Spacer(flex: 1,),
             Container(
               alignment: Alignment.center,
-              child: Text("Login",
+              child: Text("Register",
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 36,
@@ -66,27 +37,6 @@ class _LoginPageState extends State<LoginPage> {
               ),
             ),
             Spacer(flex: 1,),
-            Container(
-              alignment: Alignment.center,
-              width: MediaQuery.of(context).size.width *0.44,
-              height: MediaQuery.of(context).size.height * 0.25,
-              child: Image(
-                fit: BoxFit.fill,
-                image: AssetImage('images/logopancingan.png')
-              ),
-            ),
-            Spacer(flex: 1,),
-            Container(
-              alignment: Alignment.center,
-              child: Text("Pancingan",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 30,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
-              ),
-            ),
             Spacer(flex: 1,),
             Container(
               padding: EdgeInsets.only(left:20,right:10),
@@ -98,7 +48,6 @@ class _LoginPageState extends State<LoginPage> {
                 color: Colors.white,
               ),
               child: TextField(
-                controller: email,
                 decoration: InputDecoration.collapsed(hintText: 'Email')
               ),
             ),
@@ -113,8 +62,49 @@ class _LoginPageState extends State<LoginPage> {
                 color: Colors.white,
               ),
               child: TextField(
-                controller: pass,
+                decoration: InputDecoration.collapsed(hintText: 'Nama')
+              ),
+            ),
+            Spacer(flex: 1,),
+            Container(
+              padding: EdgeInsets.only(left:20,right:10),
+              alignment: Alignment.center,
+              width: MediaQuery.of(context).size.width *0.7,              
+              height: MediaQuery.of(context).size.height * 0.058,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                color: Colors.white,
+              ),
+              child: TextField(
                 decoration: InputDecoration.collapsed(hintText: 'Password')
+              ),
+            ),
+            Spacer(flex: 1,),
+            Container(
+              padding: EdgeInsets.only(left:20,right:10),
+              alignment: Alignment.center,
+              width: MediaQuery.of(context).size.width *0.7,              
+              height: MediaQuery.of(context).size.height * 0.058,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                color: Colors.white,
+              ),
+              child: TextField(
+                decoration: InputDecoration.collapsed(hintText: 'Kelamin')
+              ),
+            ),
+            Spacer(flex: 1,),
+            Container(
+              padding: EdgeInsets.only(left:20,right:10),
+              alignment: Alignment.center,
+              width: MediaQuery.of(context).size.width *0.7,              
+              height: MediaQuery.of(context).size.height * 0.058,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                color: Colors.white,
+              ),
+              child: TextField(
+                decoration: InputDecoration.collapsed(hintText: 'Hp')
               ),
             ),
             Spacer(flex: 1,),
@@ -131,18 +121,16 @@ class _LoginPageState extends State<LoginPage> {
                     borderRadius: BorderRadius.circular(40)
                   )
                 ),
-                onPressed: (){
-                  login();
-                },
+                onPressed: (){},
                 child: Text(
-                  "Login",
+                  "Register",
                   style: TextStyle(
                     fontSize: 18),
                 ),),
             ),
             Spacer(flex: 2,),
             Text(
-              "Belum punya akun?",
+              "Sudah punya akun?",
               style: TextStyle(
                 fontSize: 16,
                 color: Colors.white
@@ -152,12 +140,12 @@ class _LoginPageState extends State<LoginPage> {
               onPressed: (){Navigator.pushReplacement(
                   context, 
                   PageRouteBuilder(
-                      pageBuilder: (context, animation1, animation2) => RegisterPage(),
+                      pageBuilder: (context, animation1, animation2) => LoginPage(),
                       transitionDuration: Duration.zero,
                   ),
                 );}, 
               child: Text(
-                "Register disini",
+                "Login disini",
                 style: TextStyle(
                   color: Color(0xff00609B),
                   fontSize: 16
@@ -169,27 +157,6 @@ class _LoginPageState extends State<LoginPage> {
         ),
         ],
       ),
-    );
-  }
-}
-
-
-
-class UserDetail extends StatefulWidget {
-  static TextEditingController email = TextEditingController();
-  static TextEditingController nama = TextEditingController();
-  static TextEditingController kelamin = TextEditingController();
-  static TextEditingController hp = TextEditingController();
-
-  @override
-  _UserDetailState createState() => _UserDetailState();
-}
-
-class _UserDetailState extends State<UserDetail> {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      
     );
   }
 }
