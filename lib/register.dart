@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:pancingan1/login.dart';
+import './login.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({ Key? key }) : super(key: key);
@@ -9,6 +11,31 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
+  TextEditingController email = TextEditingController();
+  TextEditingController nama = TextEditingController();
+  TextEditingController pass = TextEditingController();
+  TextEditingController kel = TextEditingController();
+  TextEditingController hp = TextEditingController();
+  bool hide = true;
+
+  void regis() async{
+    try{
+      var response = await http.post(Uri.parse("http://10.0.2.2/pancingan/insertAkun.php"), 
+          body: {"email":email.text,"nama":nama.text,"pass":pass.text,"kel":kel.text,"hp":hp.text});
+      Navigator.pushReplacement(
+                  context, 
+                  PageRouteBuilder(
+                      pageBuilder: (context, animation1, animation2) => LoginPage(),
+                      transitionDuration: Duration.zero,
+                  ),
+                );
+    }catch(err){
+      print(err);
+    }
+
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -19,15 +46,15 @@ class _RegisterPageState extends State<RegisterPage> {
           Container(
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.height,
-            color: Color(0xff56B9F5)
+            color: const Color(0xff56B9F5)
           ),
           Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Spacer(flex: 1,),
+            const Spacer(flex: 1,),
             Container(
               alignment: Alignment.center,
-              child: Text("Register",
+              child: const Text("Register",
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 36,
@@ -48,7 +75,8 @@ class _RegisterPageState extends State<RegisterPage> {
                 color: Colors.white,
               ),
               child: TextField(
-                decoration: InputDecoration.collapsed(hintText: 'Email')
+                controller: email,
+                decoration: const InputDecoration.collapsed(hintText: 'Email')
               ),
             ),
             Spacer(flex: 1,),
@@ -62,7 +90,39 @@ class _RegisterPageState extends State<RegisterPage> {
                 color: Colors.white,
               ),
               child: TextField(
-                decoration: InputDecoration.collapsed(hintText: 'Nama')
+                controller: nama,
+                decoration: const InputDecoration.collapsed(hintText: 'Nama')
+              ),
+            ),
+            const Spacer(flex: 1,),
+            Container(
+              padding: EdgeInsets.only(left:20,right:10),
+              alignment: Alignment.center,
+              width: MediaQuery.of(context).size.width *0.7,              
+              height: MediaQuery.of(context).size.height * 0.058,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                color: Colors.white,
+              ),
+              child: TextField(
+                obscureText: hide,
+                controller: pass,
+                decoration: InputDecoration(
+                  hintText: 'Password',
+                  suffixIcon: InkWell(
+                                  onTap: () => setState(
+                                    () => hide =
+                                        !hide,
+                                  ),
+                                  child: Icon(
+                                    hide
+                                        ? Icons.visibility_off_outlined
+                                        : Icons.visibility_outlined,
+                                    color: Color(0xFF757575),
+                                    size: 22,
+                                  ),
+                                ),
+                )
               ),
             ),
             Spacer(flex: 1,),
@@ -76,20 +136,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 color: Colors.white,
               ),
               child: TextField(
-                decoration: InputDecoration.collapsed(hintText: 'Password')
-              ),
-            ),
-            Spacer(flex: 1,),
-            Container(
-              padding: EdgeInsets.only(left:20,right:10),
-              alignment: Alignment.center,
-              width: MediaQuery.of(context).size.width *0.7,              
-              height: MediaQuery.of(context).size.height * 0.058,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-                color: Colors.white,
-              ),
-              child: TextField(
+                controller: kel,
                 decoration: InputDecoration.collapsed(hintText: 'Kelamin')
               ),
             ),
@@ -104,6 +151,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 color: Colors.white,
               ),
               child: TextField(
+                controller: hp,
                 decoration: InputDecoration.collapsed(hintText: 'Hp')
               ),
             ),
@@ -121,15 +169,15 @@ class _RegisterPageState extends State<RegisterPage> {
                     borderRadius: BorderRadius.circular(40)
                   )
                 ),
-                onPressed: (){},
-                child: Text(
+                onPressed: ()=>regis(),
+                child: const Text(
                   "Register",
                   style: TextStyle(
                     fontSize: 18),
                 ),),
             ),
-            Spacer(flex: 2,),
-            Text(
+            const Spacer(flex: 2,),
+            const Text(
               "Sudah punya akun?",
               style: TextStyle(
                 fontSize: 16,
@@ -144,7 +192,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       transitionDuration: Duration.zero,
                   ),
                 );}, 
-              child: Text(
+              child: const Text(
                 "Login disini",
                 style: TextStyle(
                   color: Color(0xff00609B),
@@ -152,7 +200,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 ),
               )
             ),
-            Spacer(flex: 1,)
+            const Spacer(flex: 1,)
           ],
         ),
         ],
