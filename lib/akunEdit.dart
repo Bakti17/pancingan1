@@ -1,16 +1,12 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:pancingan1/akun.dart';
+import 'package:pancingan1/login.dart';
 import './homepage.dart';
-import 'package:intl/intl.dart';
-import 'package:intl/date_symbol_data_local.dart';
 import 'package:http/http.dart' as http;
 
 
 class AkunEdit extends StatefulWidget {
-  static TextEditingController tempat = TextEditingController();
-  static List list = [];
-  
   @override
   _AkunEditState createState() => _AkunEditState();
 }
@@ -20,36 +16,19 @@ class _AkunEditState extends State<AkunEdit> {
   TextEditingController namaLengkap = TextEditingController();
   TextEditingController nomorHp = TextEditingController();
   
-  String valLayanan = "";
-  List<String> listLayanan = [];
-  
-  void LLayanan(String dinas) async{
-    final response = await  http.post(Uri.parse("http://10.0.2.2/antriyuk/getLayanan.php"), body: {"dinas":dinas});
-    List item = jsonDecode(response.body);
-    for(int i =0; i<item.length; i++){
-      String n = item[i]['layanan'];
-      setState(() {
-         listLayanan.add(n);
-      });
+  void updateData () async{
+    try{
+    final response = await http.post(Uri.parse("http://10.0.2.2/pancingan/updateData.php"), body: {"email":email.text,"nama":namaLengkap.text,"hp":nomorHp.text});
+    setState(() {
+      UserDetail.hp.text = nomorHp.text;
+      UserDetail.nama.text = namaLengkap.text;
+      UserDetail.email.text = email.text;
+    });
+    _showMyDialog();
     }
-    if(listLayanan.length>0){
-      valLayanan = listLayanan[0];
-    }
-    else{
-      _showMyDialog();
-    }
+    catch(err){}
+    
   }
-
-  // void _lanjut(){
-  //   ReviewAntri.nama.text = namaLengkap.text;
-  //   ReviewAntri.layanan.text = valLayanan;
-  //   ReviewAntri.tanggal.text = dateinput.text;
-  //   ReviewAntri.tempat.text = tempat.text;
-  //   HasilAntri.nama.text = namaLengkap.text;
-  //   HasilAntri.layanan.text = valLayanan;
-  //   HasilAntri.tempat.text = tempat.text;
-  //   Navigator.push(context, MaterialPageRoute(builder: (context)=>ReviewAntri()));
-  // }
 
   Future<void> _showMyDialog() async {
     return showDialog<void>(
@@ -57,12 +36,11 @@ class _AkunEditState extends State<AkunEdit> {
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Belum ada data'),
+          title: const Text('Berhasil update data'),
           content: SingleChildScrollView(
             child: ListBody(
               children: const <Widget>[
-                Text('Maaf. Belum ada layanan yang ada'),
-                Text('pada tempat yang anda pilih'),
+                Text('Data yang anda masukkan berhasil diupdate'),
               ],
             ),
           ),
@@ -70,8 +48,8 @@ class _AkunEditState extends State<AkunEdit> {
             TextButton(
               child: const Text('OK'),
               onPressed: () {
-                // Navigator.of(context)
-                // .pushAndRemoveUntil(MaterialPageRoute(builder: (context)=>HalHome()), (Route<dynamic> route) => false);
+                Navigator.of(context)
+                .pushAndRemoveUntil(MaterialPageRoute(builder: (context)=>Akun()), (Route<dynamic> route) => false);
               },
             ),
           ],
@@ -79,16 +57,13 @@ class _AkunEditState extends State<AkunEdit> {
       },
     );
   }
+
   @override
   void initState(){ 
     super.initState();
-    initializeDateFormatting('id_ID', null);
-
-    // namaLengkap.text = user.displayName!;
-    // String ndinas= AkunEdit.tempat.text;  
-    // tempat.text = ndinas;
-    // dateinput.text = ReviewAntri.tanggal.text;
-    // LLayanan(ndinas);
+    email.text = UserDetail.email.text;
+    namaLengkap.text = UserDetail.nama.text;
+    nomorHp.text = UserDetail.hp.text;
   }
 
   @override
@@ -212,6 +187,7 @@ class _AkunEditState extends State<AkunEdit> {
               child: ElevatedButton(                
                 onPressed: (){
                   // _lanjut();
+                  updateData();
                 },
                 child: Text("SELESAI", style: TextStyle(
                   color: Colors.white,

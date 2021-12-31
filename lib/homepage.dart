@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:pancingan1/login.dart';
+import 'package:pancingan1/pesan.dart';
 import 'package:pancingan1/transaksi.dart';
 import 'package:http/http.dart' as http;
 import 'akun.dart';
@@ -55,7 +56,7 @@ class _HomePageState extends State<HomePage> {
               ),
               Container(
                 width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height * 0.8,
+                height: MediaQuery.of(context).size.height * 0.807,
                 alignment: Alignment.center,
                 // color: Colors.red,
                 child: DaftarTempat(),
@@ -111,7 +112,12 @@ class _DaftarTempatState extends State<DaftarTempat> {
                 primary: Colors.white70,
                 elevation: 10
               ),
-              onPressed: (){},
+              onPressed: (){
+                setState(() {
+                  Pesan.tempat = list[index]['nama_tempat'];
+                });
+                Navigator.push(context, MaterialPageRoute(builder: (context)=>Pesan()));
+              },
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -120,11 +126,10 @@ class _DaftarTempatState extends State<DaftarTempat> {
                     width: MediaQuery.of(context).size.width * 0.22,
                     height: MediaQuery.of(context).size.height * 0.18,
                     decoration: BoxDecoration(
-                      color: Colors.red,
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Image.network(
-                      "http://10.0.2.2/pancingan/"+(list[index]['id']).toString()+".jpg",
+                      "http://10.0.2.2/pancingan/"+(index+1).toString()+".jpg",
                       fit: BoxFit.fill,
                       ),  
                   ),
@@ -138,22 +143,28 @@ class _DaftarTempatState extends State<DaftarTempat> {
                        const SizedBox(
                         height: 10,
                       ),
-                      Text(
-                        list[index]['nama_tempat'],
-                        style:const TextStyle(
-                          color: Colors.black,
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.5,
+                        child: Text(
+                          list[index]['nama_tempat'],
+                          style:const TextStyle(
+                            color: Colors.black,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold
+                          ),
                         ),
                       ), 
                       const SizedBox(
                         height: 20,
                       ),
-                      Text(
-                        list[index]['alamat'],
-                        style: const TextStyle(
-                          color: Colors.black,
-                          fontSize: 14
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.5,
+                        child: Text(
+                          list[index]['alamat'],
+                          style: const TextStyle(
+                            color: Colors.black,
+                            fontSize: 14
+                          ),
                         ),
                       )
                     ],

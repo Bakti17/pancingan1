@@ -1,12 +1,6 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:pancingan1/akun.dart';
-import 'package:pancingan1/akunEdit.dart';
-import 'package:pancingan1/homepage.dart';
-import 'package:pancingan1/login.dart';
-import 'package:pancingan1/register.dart';
-import 'package:pancingan1/transaksi.dart';
+import './login.dart';
 
 class MyHttpOverrides extends HttpOverrides{
   @override
@@ -26,7 +20,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       debugShowCheckedModeBanner: false,
       home:Scaffold(
         body: LoginPage(),

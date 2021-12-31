@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:easy_debounce/easy_debounce.dart';
 import 'package:pancingan1/homepage.dart';
 import 'package:pancingan1/register.dart';
 import 'package:http/http.dart' as http;
@@ -15,6 +16,7 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   TextEditingController email = TextEditingController();
   TextEditingController pass = TextEditingController();
+  bool hide = true;
   
   void login() async{
     try{
@@ -42,6 +44,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Stack(
         fit: StackFit.expand,
         children: <Widget>[ 
@@ -53,7 +56,8 @@ class _LoginPageState extends State<LoginPage> {
           Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Spacer(flex: 1,),
+            Spacer(flex: 2,),
+            // SizedBox(height: 60,),
             Container(
               alignment: Alignment.center,
               child: Text("Login",
@@ -66,6 +70,7 @@ class _LoginPageState extends State<LoginPage> {
               ),
             ),
             Spacer(flex: 1,),
+          //  SizedBox(height: 30,),
             Container(
               alignment: Alignment.center,
               width: MediaQuery.of(context).size.width *0.44,
@@ -76,6 +81,7 @@ class _LoginPageState extends State<LoginPage> {
               ),
             ),
             Spacer(flex: 1,),
+          //  SizedBox(height: 30,),
             Container(
               alignment: Alignment.center,
               child: Text("Pancingan",
@@ -88,6 +94,7 @@ class _LoginPageState extends State<LoginPage> {
               ),
             ),
             Spacer(flex: 1,),
+            // SizedBox(height: 30,),
             Container(
               padding: EdgeInsets.only(left:20,right:10),
               alignment: Alignment.center,
@@ -103,6 +110,7 @@ class _LoginPageState extends State<LoginPage> {
               ),
             ),
             Spacer(flex: 1,),
+            // SizedBox(height: 30,),
             Container(
               padding: EdgeInsets.only(left:20,right:10),
               alignment: Alignment.center,
@@ -113,11 +121,28 @@ class _LoginPageState extends State<LoginPage> {
                 color: Colors.white,
               ),
               child: TextField(
+                obscureText: hide,
                 controller: pass,
-                decoration: InputDecoration.collapsed(hintText: 'Password')
+                decoration: InputDecoration(
+                  hintText: 'Password',
+                  suffixIcon: InkWell(
+                                  onTap: () => setState(
+                                    () => hide =
+                                        !hide,
+                                  ),
+                                  child: Icon(
+                                    hide
+                                        ? Icons.visibility_off_outlined
+                                        : Icons.visibility_outlined,
+                                    color: Color(0xFF757575),
+                                    size: 22,
+                                  ),
+                                ),
+                )
               ),
             ),
             Spacer(flex: 1,),
+            // SizedBox(height: 30,),
             Container(
               width: MediaQuery.of(context).size.width * 0.4,
               height: MediaQuery.of(context).size.height * 0.06,
@@ -140,7 +165,8 @@ class _LoginPageState extends State<LoginPage> {
                     fontSize: 18),
                 ),),
             ),
-            Spacer(flex: 2,),
+            Spacer(flex: 1,),
+            // SizedBox(height: 20,),
             Text(
               "Belum punya akun?",
               style: TextStyle(
@@ -164,7 +190,8 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               )
             ),
-            Spacer(flex: 1,)
+            Spacer(flex: 1,),
+            // SizedBox(height: 10,),
           ],
         ),
         ],

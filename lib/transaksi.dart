@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'package:pancingan1/login.dart';
+
 import './homepage.dart';
 import './Akun.dart';
 import 'package:flutter/material.dart';
@@ -19,6 +21,7 @@ class _TransaksiState extends State<Transaksi> {
       appBar: AppBar(
         backgroundColor: Color(0xff56B9F5),
         title: const Text("Aktivitas Saya"),
+        centerTitle: true,
       ),
       body: Column(
         children: [
@@ -52,24 +55,97 @@ class Antrian extends StatefulWidget {
 }
 
 class _AntrianState extends State<Antrian> {
-  List listAntrian = [
-    {"nama_tempat": "Pemancingan Mas Celeng", "tanggal":"12 Desember 2021","nomor":"12"},
-    {"nama_tempat": "Pemancingan Mas Celeng", "tanggal":"12 Desember 2021","nomor":"12"},
-    {"nama_tempat": "Pemancingan Mas Celeng", "tanggal":"12 Desember 2021","nomor":"12"},
-    {"nama_tempat": "Pemancingan Mas Celeng", "tanggal":"12 Desember 2021","nomor":"12"},
-  ];
+  List list = [];
 
-  // Future getAntrian() async{
-  //   final response = await http.post(Uri.parse("http://10.0.2.2/antriyuk/getAntrian.php"),body: {"email":user.email,"status":"Dipesan"});
-  //   setState(() {
-  //     listAntrian = jsonDecode(response.body);
-  //   });
-  // }
+  void getBooking() async{
+    final response = await http.post(Uri.parse("http://10.0.2.2/pancingan/getBooking.php"),body: {"email":UserDetail.email.text});
+    setState(() {
+      list = jsonDecode(response.body);
+    });
+  }
+
+  void batal(int id,String tempat,String tanggal) async{
+    try{
+      final response = await http.post(Uri.parse("http://10.0.2.2/pancingan/hapusBooking.php"),body: {"id":id.toString()});
+      _showMyDialogSukses(tempat, tanggal, id);
+    }
+    catch(err){
+      print(err);
+    }
+  }
 
   @override
   void initState() { 
     super.initState();
-    // getAntrian();
+    getBooking();
+  }
+
+  Future<void> _showMyDialog(String tempat, String tanggal, int id) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Pembatalan bookingan'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text("Pesanan anda tempat " +tempat+" dan tanggal " + tanggal),
+                const Text('Apakah anda yakin untuk membatalkan pesanan ini?'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('TIDAK'),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+            TextButton(
+              child: const Text('YA'),
+              onPressed: () {
+                batal(id,tempat,tanggal);
+                setState(() {
+                  getBooking();
+                  Navigator.of(context)
+                  .pushAndRemoveUntil(MaterialPageRoute(builder: (context)=>Transaksi()), (Route<dynamic> route) => false);
+                });
+                
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+  
+  Future<void> _showMyDialogSukses(String tempat, String tanggal, int id) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Pembatalan Sukses'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text("Pesanan anda tempat " +tempat+" dan tanggal " + tanggal),
+                const Text('Sudah Dibatalkan'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('OK'),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
 
@@ -77,13 +153,13 @@ class _AntrianState extends State<Antrian> {
   Widget build(BuildContext context) {
     return ListView.builder(
       scrollDirection: Axis.vertical,
-      itemCount: listAntrian.length,
+      itemCount: list.length,
       itemBuilder: (context,index){
         return Padding(
           padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
           child: Container(
             width: MediaQuery.of(context).size.width * 0.9,
-            height: MediaQuery.of(context).size.height * 0.15,
+            height: MediaQuery.of(context).size.height * 0.2,
             padding: EdgeInsets.only(top:20,left: 20),
             decoration: BoxDecoration(
               color: Colors.white,
@@ -136,7 +212,7 @@ class _AntrianState extends State<Antrian> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      listAntrian[index]['nama_tempat'],
+                      list[index]['nama_tempat'],
                       style:const TextStyle(
                         color: Colors.black,
                         fontSize: 15,
@@ -145,7 +221,7 @@ class _AntrianState extends State<Antrian> {
                     ),
                     const SizedBox(height: 5),
                     Text(
-                      listAntrian[index]['tanggal'],
+                      list[index]['tanggal'],
                       style:const TextStyle(
                         color: Colors.black,
                         fontSize: 15,
@@ -154,14 +230,26 @@ class _AntrianState extends State<Antrian> {
                     ),
                     const SizedBox(height: 5),
                     Text(
-                      listAntrian[index]['nomor'],
+                      list[index]['nomer'].toString(),
                       style: const TextStyle(
                         color: Colors.black,
                         fontSize: 15,
                         fontFamily: 'Roboto'
                       ),
                     ),
-                    SizedBox(height: 5),
+                    SizedBox(height: 10,),
+                    Container(
+                      width: MediaQuery.of(context).size.width * 0.3,
+                      height: MediaQuery.of(context).size.height * 0.05,
+                      child: ElevatedButton(
+                        child: const Text(
+                          "Batal",
+                        ),
+                        onPressed: (){
+                          _showMyDialog(list[index]['nama_tempat'], list[index]['tanggal'], list[index]['id']);
+                        },
+                      ),
+                    )
                   ],)
               ],
             )

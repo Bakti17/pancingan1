@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:pancingan1/akunEdit.dart';
 import 'package:pancingan1/login.dart';
 import 'package:pancingan1/transaksi.dart';
 import 'homepage.dart';
@@ -33,7 +34,7 @@ class _AkunState extends State<Akun> {
           Container(
             child: Container(
               width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height * 0.791,
+                height: MediaQuery.of(context).size.height * 0.79,
                 decoration: BoxDecoration(
                     color: Colors.white,
                     boxShadow: [
@@ -180,7 +181,7 @@ class _AkunState extends State<Akun> {
                       ],
                     ),
                   ),
-                  Spacer(flex:1),
+                  const Spacer(flex:1),
                   Container(
                     width: MediaQuery.of(context).size.width * 0.8,
                     height: MediaQuery.of(context).size.height * 0.07,
@@ -188,7 +189,7 @@ class _AkunState extends State<Akun> {
                       borderRadius: BorderRadius.circular(5),
                     ),
                     child: ElevatedButton(
-                      child: Text(
+                      child: const Text(
                         "Edit Akun",
                         style: TextStyle(
                           fontSize: 14,
@@ -200,12 +201,14 @@ class _AkunState extends State<Akun> {
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
                         elevation: 10
                       ),
-                      onPressed: (){},
-                      // =>_singOut(),
+                      onPressed: (){
+                        Navigator.push(context, MaterialPageRoute(builder: (context)=>AkunEdit()));
+                      },
+                      
                     ),
                   ),
-                  Spacer(flex: 10,),
-                  Text(
+                  const Spacer(flex: 10,),
+                  const Text(
                     "Version 1.1",
                     style: TextStyle(
                       color: Color(0xffbababa),
@@ -213,7 +216,7 @@ class _AkunState extends State<Akun> {
                       fontFamily: 'Roboto Bold'
                     ),
                   ),
-                  Spacer(flex: 1,),
+                  const Spacer(flex: 1,),
                 ],
               ),
             ),
