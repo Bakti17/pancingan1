@@ -58,10 +58,11 @@ class _AntrianState extends State<Antrian> {
   List list = [];
 
   void getBooking() async{
-    final response = await http.post(Uri.parse("http://10.0.2.2/pancingan/getBooking.php"),body: {"email":UserDetail.email.text});
+    try{final response = await http.post(Uri.parse("http://10.0.2.2/pancingan/getBooking.php"),body: {"email":UserDetail.email.text});
     setState(() {
       list = jsonDecode(response.body);
     });
+    }catch(err){}
   }
 
   void batal(int id,String tempat,String tanggal) async{
